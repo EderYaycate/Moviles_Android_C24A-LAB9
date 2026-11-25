@@ -1,21 +1,29 @@
 package com.yaycate.murocampus.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yaycate.murocampus.ui.theme.AzulMuro
+import com.yaycate.murocampus.ui.theme.BordeGris
+import com.yaycate.murocampus.ui.theme.FondoTarjeta
 import com.yaycate.murocampus.viewmodel.PostsViewModel
 import com.yaycate.murocampus.viewmodel.UiState
 
@@ -32,7 +40,7 @@ fun PantallaDetalle(vm: PostsViewModel, id: Int, modifier: Modifier = Modifier) 
         is UiState.Error -> ErrorConReintento(
             mensaje = state.mensaje,
             onReintentar = { vm.abrir(id) },
-            modifier = modifier.fillMaxSize().padding(16.dp)
+            modifier = modifier.padding(16.dp)
         )
         is UiState.Exito -> Column(
             modifier = modifier
@@ -40,35 +48,53 @@ fun PantallaDetalle(vm: PostsViewModel, id: Int, modifier: Modifier = Modifier) 
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            Text(
-                text = state.datos.post.title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = state.datos.post.body,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, BordeGris)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = state.datos.post.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = state.datos.post.body,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Comentarios (${state.datos.comentarios.size})",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = AzulMuro
             )
             Spacer(modifier = Modifier.height(8.dp))
             state.datos.comentarios.forEach { comentario ->
-                Text(
-                    text = comentario.email,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = comentario.body,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = FondoTarjeta),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            text = comentario.email,
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = AzulMuro
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = comentario.body,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }

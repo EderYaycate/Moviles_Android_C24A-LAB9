@@ -66,7 +66,7 @@ fun PantallaLista(
                 is UiState.Error -> ErrorConReintento(
                     mensaje = state.mensaje,
                     onReintentar = vm::cargar,
-                    modifier = Modifier.fillMaxSize().padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 )
                 is UiState.Exito -> if (state.datos.isEmpty()) {
                     Text(

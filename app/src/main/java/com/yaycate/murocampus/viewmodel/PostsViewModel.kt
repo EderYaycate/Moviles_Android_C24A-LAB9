@@ -29,16 +29,53 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
     private val _borrado = MutableStateFlow<UiState<Unit>?>(null)
     val borrado = _borrado.asStateFlow()
 
+    private val tamanoPagina = 10
+    private var siguienteInicio = 0
+
+    private val _hayMas = MutableStateFlow(false)
+    val hayMas = _hayMas.asStateFlow()
+
+    private val _cargandoMas = MutableStateFlow(false)
+    val cargandoMas = _cargandoMas.asStateFlow()
+
+    private val _errorMas = MutableStateFlow<String?>(null)
+    val errorMas = _errorMas.asStateFlow()
+
     init { cargar() }
 
     fun cargar() {
         viewModelScope.launch {
             _lista.value = UiState.Cargando
-            val resultado = _usuarioFiltro.value?.let { repo.porUsuario(it) } ?: repo.listar()
-            resultado.fold(
-                onSuccess = { _lista.value = UiState.Exito(it) },
-                onFailure = { _lista.value = UiState.Error(mensajeDe(it)) }
+            siguienteInicio = 0
+            repo.pagina(_usuarioFiltro.value, 0, tamanoPagina).fold(
+                onSuccess = {
+                    _lista.value = UiState.Exito(it)
+                    siguienteInicio = it.size
+                    _hayMas.value = it.size == tamanoPagina
+                },
+                onFailure = {
+                    _lista.value = UiState.Error(mensajeDe(it))
+                    _hayMas.value = false
+                }
             )
+        }
+    }
+
+    fun cargarMas() {
+        if (!_hayMas.value || _cargandoMas.value) return
+        viewModelScope.launch {
+            _cargandoMas.value = true
+            _errorMas.value = null
+            repo.pagina(_usuarioFiltro.value, siguienteInicio, tamanoPagina).fold(
+                onSuccess = { nuevas ->
+                    val actual = (_lista.value as? UiState.Exito)?.datos.orEmpty()
+                    _lista.value = UiState.Exito(actual + nuevas)
+                    siguienteInicio += nuevas.size
+                    _hayMas.value = nuevas.size == tamanoPagina
+                },
+                onFailure = { _errorMas.value = mensajeDe(it) }
+            )
+            _cargandoMas.value = false
         }
     }
 

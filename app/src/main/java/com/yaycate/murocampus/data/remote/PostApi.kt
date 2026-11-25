@@ -26,6 +26,13 @@ interface PostApi {
     @POST("posts")
     suspend fun crear(@Body nuevo: NuevoPost): Post
 
+    @GET("posts")
+    suspend fun pagina(
+        @Query("userId") userId: Int?,
+        @Query("_start") inicio: Int,
+        @Query("_limit") limite: Int
+    ): List<Post>
+
     @DELETE("posts/{id}")
     suspend fun borrar(@Path("id") id: Int)
 }

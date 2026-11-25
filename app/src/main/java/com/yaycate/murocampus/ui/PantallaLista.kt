@@ -7,9 +7,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.item
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
@@ -20,8 +25,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yaycate.murocampus.ui.theme.AzulMuro
@@ -36,6 +43,9 @@ fun PantallaLista(
 ) {
     val estado by vm.lista.collectAsStateWithLifecycle()
     val filtro by vm.usuarioFiltro.collectAsStateWithLifecycle()
+    val hayMas by vm.hayMas.collectAsStateWithLifecycle()
+    val cargandoMas by vm.cargandoMas.collectAsStateWithLifecycle()
+    val errorMas by vm.errorMas.collectAsStateWithLifecycle()
     var busqueda by rememberSaveable { mutableStateOf("") }
 
     val colorChip = FilterChipDefaults.filterChipColors(
@@ -106,6 +116,34 @@ fun PantallaLista(
                         ) {
                             items(resultados) { post ->
                                 TarjetaPost(post = post, onClick = { onAbrir(post.id) })
+                            }
+                            item {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    if (cargandoMas) {
+                                        CircularProgressIndicator(
+                                            color = AzulMuro,
+                                            modifier = Modifier.padding(8.dp)
+                                        )
+                                    } else if (hayMas) {
+                                        Button(
+                                            onClick = vm::cargarMas,
+                                            colors = ButtonDefaults.buttonColors(containerColor = AzulMuro),
+                                            shape = RoundedCornerShape(50)
+                                        ) {
+                                            Text("Cargar más", fontWeight = FontWeight.Bold)
+                                        }
+                                    }
+                                    errorMas?.let {
+                                        Text(
+                                            text = it,
+                                            color = MaterialTheme.colorScheme.error,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

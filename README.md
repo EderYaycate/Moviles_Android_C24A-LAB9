@@ -58,19 +58,24 @@ PostApi (Retrofit + OkHttp)  ──  https://jsonplaceholder.typicode.com/
 ## Capturas
 
 **Lista de publicaciones**
-![Lista](docs/capturas/lista.png)
+
+![img.png](img.png)
 
 **Detalle con comentarios**
-![Detalle](docs/capturas/detalle.png)
+
+![img_1.png](img_1.png)
 
 **Filtro por usuario**
-![Filtro](docs/capturas/filtro.png)
+
+![img_2.png](img_2.png)
 
 **Crear publicación**
-![Crear](docs/capturas/crear.png)
+
+![img_3.png](img_3.png)
 
 **Error de conexión**
-![Error](docs/capturas/error.png)
+
+![img_4.png](img_4.png)
 
 ## Para pensar
 

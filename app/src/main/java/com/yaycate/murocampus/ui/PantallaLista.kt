@@ -15,7 +15,11 @@ import com.yaycate.murocampus.viewmodel.PostsViewModel
 import com.yaycate.murocampus.viewmodel.UiState
 
 @Composable
-fun PantallaLista(vm: PostsViewModel, modifier: Modifier = Modifier) {
+fun PantallaLista(
+    vm: PostsViewModel,
+    onAbrir: (Int) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     val estado by vm.lista.collectAsStateWithLifecycle()
     when (val state = estado) {
         UiState.Cargando -> Cargando(modifier = modifier.fillMaxSize())
@@ -30,7 +34,7 @@ fun PantallaLista(vm: PostsViewModel, modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(state.datos) { post ->
-                TarjetaPost(post = post)
+                TarjetaPost(post = post, onClick = { onAbrir(post.id) })
             }
         }
     }

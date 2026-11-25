@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.yaycate.murocampus.model.Post
 
 @Composable
-fun TarjetaPost(post: Post, modifier: Modifier = Modifier) {
-    Card(modifier = modifier.fillMaxWidth()) {
+fun TarjetaPost(post: Post, onClick: () -> Unit = {}, modifier: Modifier = Modifier) {
+    Card(onClick = onClick, modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = "Usuario ${post.userId}",

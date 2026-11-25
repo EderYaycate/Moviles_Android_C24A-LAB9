@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.yaycate.murocampus.model.Post
-import com.yaycate.murocampus.ui.theme.AzulMuro
+import com.yaycate.murocampus.ui.theme.AzulMarino
 import com.yaycate.murocampus.ui.theme.BordeGris
 import com.yaycate.murocampus.ui.theme.FondoTarjeta
 import com.yaycate.murocampus.ui.theme.NaranjaUsuario
@@ -38,7 +38,7 @@ fun BadgeUsuario(userId: Int) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(if (impar) AzulMuro else NaranjaUsuario)
+            .background(if (impar) AzulMarino else NaranjaUsuario)
             .padding(horizontal = 8.dp, vertical = 2.dp)
     ) {
         Text(
@@ -91,7 +91,7 @@ fun Cargando(modifier: Modifier = Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                CircularProgressIndicator(color = AzulMuro)
+                CircularProgressIndicator(color = AzulMarino)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Cargando publicaciones...")
             }
@@ -121,7 +121,7 @@ fun ErrorConReintento(mensaje: String, onReintentar: () -> Unit, modifier: Modif
             Button(
                 onClick = onReintentar,
                 shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(containerColor = AzulMuro)
+                colors = ButtonDefaults.buttonColors(containerColor = AzulMarino)
             ) {
                 Text(text = "Reintentar", fontWeight = FontWeight.Bold)
             }

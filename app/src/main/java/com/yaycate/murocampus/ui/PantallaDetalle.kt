@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yaycate.murocampus.ui.theme.AzulMuro
+import com.yaycate.murocampus.ui.theme.AzulMarino
 import com.yaycate.murocampus.ui.theme.BordeGris
 import com.yaycate.murocampus.ui.theme.FondoTarjeta
 import com.yaycate.murocampus.viewmodel.PostsViewModel
@@ -110,7 +110,7 @@ fun PantallaDetalle(
                 text = "Comentarios (${state.datos.comentarios.size})",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = AzulMuro
+                color = AzulMarino
             )
             Spacer(modifier = Modifier.height(8.dp))
             state.datos.comentarios.forEach { comentario ->
@@ -124,7 +124,7 @@ fun PantallaDetalle(
                             text = comentario.email,
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = AzulMuro
+                            color = AzulMarino
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(

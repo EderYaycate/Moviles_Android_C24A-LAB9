@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +27,8 @@ import com.yaycate.murocampus.data.remote.RetrofitClient
 import com.yaycate.murocampus.ui.PantallaCrear
 import com.yaycate.murocampus.ui.PantallaDetalle
 import com.yaycate.murocampus.ui.PantallaLista
-import com.yaycate.murocampus.ui.theme.AzulMuro
+import com.yaycate.murocampus.ui.theme.AzulMarino
+import com.yaycate.murocampus.ui.theme.DegradadoMarino
 import com.yaycate.murocampus.ui.theme.MuroCampusTheme
 import com.yaycate.murocampus.viewmodel.PostsViewModel
 import com.yaycate.murocampus.viewmodel.PostsViewModelFactory
@@ -54,8 +56,9 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             title = { Text("MuroCampus", fontWeight = FontWeight.Bold) },
+                            modifier = Modifier.background(DegradadoMarino),
                             colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = AzulMuro,
+                                containerColor = Color.Transparent,
                                 titleContentColor = Color.White
                             )
                         )
@@ -67,7 +70,7 @@ class MainActivity : ComponentActivity() {
                                     vm.limpiarPublicado()
                                     creando = true
                                 },
-                                containerColor = AzulMuro,
+                                containerColor = AzulMarino,
                                 contentColor = Color.White
                             ) {
                                 Text("+")

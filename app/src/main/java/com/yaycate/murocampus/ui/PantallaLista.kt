@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yaycate.murocampus.ui.theme.AzulMuro
+import com.yaycate.murocampus.ui.theme.AzulMarino
 import com.yaycate.murocampus.viewmodel.PostsViewModel
 import com.yaycate.murocampus.viewmodel.UiState
 
@@ -49,7 +49,7 @@ fun PantallaLista(
     var busqueda by rememberSaveable { mutableStateOf("") }
 
     val colorChip = FilterChipDefaults.filterChipColors(
-        selectedContainerColor = AzulMuro,
+        selectedContainerColor = AzulMarino,
         selectedLabelColor = Color.White
     )
 
@@ -124,13 +124,13 @@ fun PantallaLista(
                                 ) {
                                     if (cargandoMas) {
                                         CircularProgressIndicator(
-                                            color = AzulMuro,
+                                            color = AzulMarino,
                                             modifier = Modifier.padding(8.dp)
                                         )
                                     } else if (hayMas) {
                                         Button(
                                             onClick = vm::cargarMas,
-                                            colors = ButtonDefaults.buttonColors(containerColor = AzulMuro),
+                                            colors = ButtonDefaults.buttonColors(containerColor = AzulMarino),
                                             shape = RoundedCornerShape(50)
                                         ) {
                                             Text("Cargar más", fontWeight = FontWeight.Bold)

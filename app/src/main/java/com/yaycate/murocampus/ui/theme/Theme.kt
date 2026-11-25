@@ -6,10 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val EsquemaMuro = lightColorScheme(
-    primary = AzulMuro,
+    primary = AzulMarino,
     onPrimary = Color.White,
     primaryContainer = AzulClaro,
-    onPrimaryContainer = AzulOscuro
+    onPrimaryContainer = AzulOscuro,
+    secondary = AzulMarinoClaro,
+    onSecondary = Color.White,
+    surfaceTint = AzulMarino
 )
 
 @Composable

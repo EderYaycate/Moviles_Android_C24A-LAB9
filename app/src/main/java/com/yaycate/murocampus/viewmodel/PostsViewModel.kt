@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yaycate.murocampus.data.PostRepository
 import com.yaycate.murocampus.model.Comentario
+import com.yaycate.murocampus.model.NuevoPost
 import com.yaycate.murocampus.model.Post
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,9 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
 
     private val _detalle = MutableStateFlow<UiState<DetalleUi>?>(null)
     val detalle = _detalle.asStateFlow()
+
+    private val _publicado = MutableStateFlow<UiState<Post>?>(null)
+    val publicado = _publicado.asStateFlow()
 
     init { cargar() }
 
@@ -51,5 +55,19 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
                 UiState.Exito(DetalleUi(post.getOrThrow(), comentarios.getOrThrow()))
             }
         }
+    }
+
+    fun publicar(titulo: String, texto: String) {
+        viewModelScope.launch {
+            _publicado.value = UiState.Cargando
+            repo.crear(NuevoPost(userId = 1, title = titulo, body = texto)).fold(
+                onSuccess = { _publicado.value = UiState.Exito(it) },
+                onFailure = { _publicado.value = UiState.Error(mensajeDe(it)) }
+            )
+        }
+    }
+
+    fun limpiarPublicado() {
+        _publicado.value = null
     }
 }

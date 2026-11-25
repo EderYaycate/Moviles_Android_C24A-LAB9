@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.yaycate.murocampus.data.PostRepositoryRemote
 import com.yaycate.murocampus.data.remote.RetrofitClient
+import com.yaycate.murocampus.ui.PantallaCrear
 import com.yaycate.murocampus.ui.PantallaDetalle
 import com.yaycate.murocampus.ui.PantallaLista
 import com.yaycate.murocampus.ui.theme.MuroCampusTheme
@@ -36,9 +38,11 @@ class MainActivity : ComponentActivity() {
                 val vm: PostsViewModel = ViewModelProvider(this@MainActivity, PostsViewModelFactory(repo))[PostsViewModel::class.java]
 
                 var idSeleccionado by rememberSaveable { mutableStateOf<Int?>(null) }
+                var creando by rememberSaveable { mutableStateOf(false) }
 
-                BackHandler(enabled = idSeleccionado != null) {
+                BackHandler(enabled = idSeleccionado != null || creando) {
                     idSeleccionado = null
+                    creando = false
                 }
 
                 Scaffold(
@@ -47,16 +51,29 @@ class MainActivity : ComponentActivity() {
                         TopAppBar(
                             title = { Text("MuroCampus") }
                         )
+                    },
+                    floatingActionButton = {
+                        if (idSeleccionado == null && !creando) {
+                            FloatingActionButton(onClick = {
+                                vm.limpiarPublicado()
+                                creando = true
+                            }) {
+                                Text("+")
+                            }
+                        }
                     }
                 ) { innerPadding ->
-                    if (idSeleccionado == null) {
-                        PantallaLista(
+                    when {
+                        creando -> PantallaCrear(
+                            vm = vm,
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                        idSeleccionado == null -> PantallaLista(
                             vm = vm,
                             onAbrir = { idSeleccionado = it },
                             modifier = Modifier.padding(innerPadding)
                         )
-                    } else {
-                        PantallaDetalle(
+                        else -> PantallaDetalle(
                             vm = vm,
                             id = idSeleccionado!!,
                             modifier = Modifier.padding(innerPadding)

@@ -65,6 +65,7 @@ fun PantallaCrear(vm: PostsViewModel, modifier: Modifier = Modifier) {
         )
         Button(
             onClick = { vm.publicar(titulo, contenido) },
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             enabled = titulo.isNotBlank() && contenido.isNotBlank() && estado !is UiState.Cargando
         ) {
             Text("Publicar")

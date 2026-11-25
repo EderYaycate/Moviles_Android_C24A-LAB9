@@ -1,11 +1,17 @@
 package com.yaycate.murocampus.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,20 +27,54 @@ fun PantallaLista(
     modifier: Modifier = Modifier
 ) {
     val estado by vm.lista.collectAsStateWithLifecycle()
-    when (val state = estado) {
-        UiState.Cargando -> Cargando(modifier = modifier.fillMaxSize())
-        is UiState.Error -> ErrorConReintento(
-            mensaje = state.mensaje,
-            onReintentar = vm::cargar,
-            modifier = modifier.fillMaxSize().padding(16.dp)
-        )
-        is UiState.Exito -> LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+    val filtro by vm.usuarioFiltro.collectAsStateWithLifecycle()
+
+    Column(modifier = modifier.fillMaxSize()) {
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(state.datos) { post ->
-                TarjetaPost(post = post, onClick = { onAbrir(post.id) })
+            item {
+                FilterChip(
+                    selected = filtro == null,
+                    onClick = { vm.filtrar(null) },
+                    label = { Text("Todos") }
+                )
+            }
+            items((1..10).toList()) { id ->
+                FilterChip(
+                    selected = filtro == id,
+                    onClick = { vm.filtrar(id) },
+                    label = { Text("Usuario $id") }
+                )
+            }
+        }
+
+        Box(modifier = Modifier.weight(1f).fillMaxSize()) {
+            when (val state = estado) {
+                UiState.Cargando -> Cargando(modifier = Modifier.fillMaxSize())
+                is UiState.Error -> ErrorConReintento(
+                    mensaje = state.mensaje,
+                    onReintentar = vm::cargar,
+                    modifier = Modifier.fillMaxSize().padding(16.dp)
+                )
+                is UiState.Exito -> if (state.datos.isEmpty()) {
+                    Text(
+                        text = "Sin publicaciones",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.datos) { post ->
+                            TarjetaPost(post = post, onClick = { onAbrir(post.id) })
+                        }
+                    }
+                }
             }
         }
     }

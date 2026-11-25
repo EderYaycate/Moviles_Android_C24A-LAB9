@@ -12,6 +12,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -23,6 +25,7 @@ import com.yaycate.murocampus.data.remote.RetrofitClient
 import com.yaycate.murocampus.ui.PantallaCrear
 import com.yaycate.murocampus.ui.PantallaDetalle
 import com.yaycate.murocampus.ui.PantallaLista
+import com.yaycate.murocampus.ui.theme.AzulMuro
 import com.yaycate.murocampus.ui.theme.MuroCampusTheme
 import com.yaycate.murocampus.viewmodel.PostsViewModel
 import com.yaycate.murocampus.viewmodel.PostsViewModelFactory
@@ -49,15 +52,23 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         TopAppBar(
-                            title = { Text("MuroCampus") }
+                            title = { Text("MuroCampus") },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = AzulMuro,
+                                titleContentColor = Color.White
+                            )
                         )
                     },
                     floatingActionButton = {
                         if (idSeleccionado == null && !creando) {
-                            FloatingActionButton(onClick = {
-                                vm.limpiarPublicado()
-                                creando = true
-                            }) {
+                            FloatingActionButton(
+                                onClick = {
+                                    vm.limpiarPublicado()
+                                    creando = true
+                                },
+                                containerColor = AzulMuro,
+                                contentColor = Color.White
+                            ) {
                                 Text("+")
                             }
                         }

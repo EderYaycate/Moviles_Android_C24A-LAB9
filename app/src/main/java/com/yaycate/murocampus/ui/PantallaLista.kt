@@ -1,8 +1,8 @@
 package com.yaycate.murocampus.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,13 +10,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yaycate.murocampus.ui.theme.AzulMuro
 import com.yaycate.murocampus.viewmodel.PostsViewModel
 import com.yaycate.murocampus.viewmodel.UiState
 
@@ -29,6 +32,11 @@ fun PantallaLista(
     val estado by vm.lista.collectAsStateWithLifecycle()
     val filtro by vm.usuarioFiltro.collectAsStateWithLifecycle()
 
+    val colorChip = FilterChipDefaults.filterChipColors(
+        selectedContainerColor = AzulMuro,
+        selectedLabelColor = Color.White
+    )
+
     Column(modifier = modifier.fillMaxSize()) {
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -38,14 +46,16 @@ fun PantallaLista(
                 FilterChip(
                     selected = filtro == null,
                     onClick = { vm.filtrar(null) },
-                    label = { Text("Todos") }
+                    label = { Text("Todos") },
+                    colors = colorChip
                 )
             }
             items((1..10).toList()) { id ->
                 FilterChip(
                     selected = filtro == id,
                     onClick = { vm.filtrar(id) },
-                    label = { Text("Usuario $id") }
+                    label = { Text("Usuario $id") },
+                    colors = colorChip
                 )
             }
         }

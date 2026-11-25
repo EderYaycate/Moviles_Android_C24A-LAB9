@@ -4,6 +4,7 @@ import com.yaycate.murocampus.model.Comentario
 import com.yaycate.murocampus.model.NuevoPost
 import com.yaycate.murocampus.model.Post
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -24,4 +25,7 @@ interface PostApi {
 
     @POST("posts")
     suspend fun crear(@Body nuevo: NuevoPost): Post
+
+    @DELETE("posts/{id}")
+    suspend fun borrar(@Path("id") id: Int)
 }

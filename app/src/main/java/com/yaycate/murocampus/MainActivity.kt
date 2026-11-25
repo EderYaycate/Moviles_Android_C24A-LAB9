@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                         else -> PantallaDetalle(
                             vm = vm,
                             id = idSeleccionado!!,
+                            onBorrado = { idSeleccionado = null },
                             modifier = Modifier.padding(innerPadding)
                         )
                     }

@@ -9,13 +9,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -28,12 +35,43 @@ import com.yaycate.murocampus.viewmodel.PostsViewModel
 import com.yaycate.murocampus.viewmodel.UiState
 
 @Composable
-fun PantallaDetalle(vm: PostsViewModel, id: Int, modifier: Modifier = Modifier) {
+fun PantallaDetalle(
+    vm: PostsViewModel,
+    id: Int,
+    onBorrado: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     LaunchedEffect(id) {
         vm.abrir(id)
     }
 
     val estado by vm.detalle.collectAsStateWithLifecycle()
+    val borrado by vm.borrado.collectAsStateWithLifecycle()
+    var confirmar by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(borrado) {
+        if (borrado is UiState.Exito) {
+            vm.limpiarBorrado()
+            onBorrado()
+        }
+    }
+
+    if (confirmar) {
+        AlertDialog(
+            onDismissRequest = { confirmar = false },
+            title = { Text("¿Borrar publicación?") },
+            text = { Text("Se eliminará la publicación $id.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmar = false
+                    vm.borrar(id)
+                }) { Text("Borrar", color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmar = false }) { Text("Cancelar") }
+            }
+        )
+    }
 
     when (val state = estado) {
         null, UiState.Cargando -> Cargando(modifier = modifier.fillMaxSize())
@@ -96,6 +134,26 @@ fun PantallaDetalle(vm: PostsViewModel, id: Int, modifier: Modifier = Modifier) 
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedButton(
+                onClick = { confirmar = true },
+                enabled = borrado !is UiState.Cargando,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Text("Borrar publicación", fontWeight = FontWeight.Bold)
+            }
+            if (borrado is UiState.Error) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = (borrado as UiState.Error).mensaje,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }

@@ -29,7 +29,7 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
     private val _borrado = MutableStateFlow<UiState<Unit>?>(null)
     val borrado = _borrado.asStateFlow()
 
-    private val tamanoPagina = 10
+    private val tamanoPagina = 20
     private var siguienteInicio = 0
 
     private val _hayMas = MutableStateFlow(false)

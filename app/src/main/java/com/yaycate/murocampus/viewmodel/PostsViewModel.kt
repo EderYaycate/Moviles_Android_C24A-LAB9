@@ -54,7 +54,7 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
                     _hayMas.value = it.size == tamanoPagina
                 },
                 onFailure = {
-                    _lista.value = UiState.Error(mensajeDe(it))
+                    _lista.value = UiState.Error(it.textoError())
                     _hayMas.value = false
                 }
             )
@@ -73,7 +73,7 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
                     siguienteInicio += nuevas.size
                     _hayMas.value = nuevas.size == tamanoPagina
                 },
-                onFailure = { _errorMas.value = mensajeDe(it) }
+                onFailure = { _errorMas.value = it.textoError() }
             )
             _cargandoMas.value = false
         }
@@ -91,7 +91,7 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
             val comentarios = repo.comentarios(id)
             val error = post.exceptionOrNull() ?: comentarios.exceptionOrNull()
             _detalle.value = if (error != null) {
-                UiState.Error(mensajeDe(error))
+                UiState.Error(error.textoError())
             } else {
                 UiState.Exito(DetalleUi(post.getOrThrow(), comentarios.getOrThrow()))
             }
@@ -103,7 +103,7 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
             _publicado.value = UiState.Cargando
             repo.crear(NuevoPost(userId = 1, title = titulo, body = texto)).fold(
                 onSuccess = { _publicado.value = UiState.Exito(it) },
-                onFailure = { _publicado.value = UiState.Error(mensajeDe(it)) }
+                onFailure = { _publicado.value = UiState.Error(it.textoError()) }
             )
         }
     }
@@ -122,7 +122,7 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
                         if (estado is UiState.Exito) UiState.Exito(estado.datos.filter { it.id != id }) else estado
                     }
                 },
-                onFailure = { _borrado.value = UiState.Error(mensajeDe(it)) }
+                onFailure = { _borrado.value = UiState.Error(it.textoError()) }
             )
         }
     }
@@ -131,3 +131,5 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
         _borrado.value = null
     }
 }
+
+private fun Throwable.textoError(): String = message ?: "Error desconocido"

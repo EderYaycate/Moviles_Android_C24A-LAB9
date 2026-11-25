@@ -1,6 +1,7 @@
 package com.yaycate.murocampus.data
 
 import com.yaycate.murocampus.data.remote.PostApi
+import com.yaycate.murocampus.data.remote.mensajeDe
 import com.yaycate.murocampus.model.Comentario
 import com.yaycate.murocampus.model.NuevoPost
 import com.yaycate.murocampus.model.Post
@@ -16,6 +17,8 @@ interface PostRepository {
     suspend fun pagina(userId: Int?, inicio: Int, limite: Int): Result<List<Post>>
 }
 
+class ErrorPost(mensaje: String) : Exception(mensaje)
+
 class PostRepositoryRemote(private val api: PostApi) : PostRepository {
     private suspend fun <T> llamar(bloque: suspend () -> T): Result<T> {
         return try {
@@ -23,7 +26,7 @@ class PostRepositoryRemote(private val api: PostApi) : PostRepository {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(ErrorPost(mensajeDe(e)))
         }
     }
 
